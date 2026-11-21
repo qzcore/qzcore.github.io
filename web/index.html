@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Cổng Khảo thí Trực tuyến — QZCore Web Portal</title>
+  <link rel="icon" type="image/svg+xml" href="../app/icons/icon.svg">
+  <meta name="theme-color" content="#0f172a">
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+    }
+
+    /* Top Navigation Bar */
+    .portal-nav {
+      height: 48px;
+      background: #0f172a;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+      z-index: 100;
+      position: relative;
+    }
+
+    .portal-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .portal-logo {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 800;
+      font-size: 15px;
+      color: #38bdf8;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+    .portal-logo:hover { opacity: 0.9; }
+
+    .portal-divider {
+      color: #475569;
+      font-size: 14px;
+    }
+
+    .portal-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #f1f5f9;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .portal-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 99px;
+      background: #0369a1;
+      color: #e0f2fe;
+    }
+    .portal-badge.exam {
+      background: #15803d;
+      color: #dcfce7;
+    }
+    .portal-badge.practice {
+      background: #4338ca;
+      color: #e0e7ff;
+    }
+
+    .portal-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .portal-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.15s ease;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .portal-btn-ghost {
+      background: rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    .portal-btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.18);
+      color: #ffffff;
+    }
+
+    .portal-btn-primary {
+      background: #2563eb;
+      color: #ffffff;
+    }
+    .portal-btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    /* Iframe Workspace */
+    .portal-frame-container {
+      width: 100%;
+      height: calc(100% - 48px);
+      position: relative;
+      background: #f8fafc;
+    }
+
+    iframe#appFrame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    /* Loading Overlay */
+    .portal-loader {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      transition: opacity 0.3s ease;
+    }
+    .portal-loader.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3.5px solid #e2e8f0;
+      border-top-color: #2563eb;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 14px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 640px) {
+      .portal-title span:not(.portal-badge) {
+        max-width: 130px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: inline-block;
+      }
+      .portal-btn span {
+        display: none;
+      }
+      .portal-btn {
+        padding: 5px 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="portal-nav">
+    <div class="portal-left">
+      <a href="https://qzcore.github.io/" class="portal-logo" title="Về trang chủ QZCore">
+        <span>⚡ QZCore</span>
+      </a>
+      <span class="portal-divider">/</span>
+      <div class="portal-title">
+        <span id="courseTitleText">Đang tải môn học...</span>
+        <span id="modeBadge" class="portal-badge exam">Thi thử</span>
+      </div>
+    </div>
+
+    <div class="portal-right">
+      <a id="btnToggleMode" href="#" class="portal-btn portal-btn-ghost" title="Chuyển chế độ thi / luyện tập">
+        <span id="toggleModeIcon">🔄</span>
+        <span id="toggleModeText">Luyện tập</span>
+      </a>
+      <a id="btnDirectGas" href="#" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn-ghost" title="Mở trực tiếp ứng dụng trên Google Apps Script trong tab riêng">
+        <span>↗ Mở tab riêng</span>
+      </a>
+      <a href="https://qzcore.github.io/" class="portal-btn portal-btn-primary" title="Quay lại Trang chủ">
+        <span>🏠 Trang chủ</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Iframe Container -->
+  <main class="portal-frame-container">
+    <div class="portal-loader" id="portalLoader">
+      <div class="spinner"></div>
+      <div style="font-size: 14px; font-weight: 600; color: #475569;" id="loaderText">Đang kết nối Cổng Khảo thí...</div>
+      <div style="font-size: 12px; color: #94a3b8; margin-top: 4px;">Dữ liệu tải trực tiếp từ máy chủ Google Workspace</div>
+    </div>
+
+    <iframe 
+      id="appFrame" 
+      src="about:blank"
+      allow="camera; microphone; fullscreen; clipboard-read; clipboard-write; autoplay"
+      loading="eager">
+    </iframe>
+  </main>
+
+  <script>
+    // Danh mục 3 Môn thi Chuẩn hóa
+    const COURSE_MAP = {
+      'toan11': {
+        title: 'Toán THPT Lớp 11',
+        code: 'TOAN_11',
+        url: 'https://script.google.com/macros/s/AKfycbwTBvCgvPckjXJGTSIep7X2YQzCeQlQ2U63rrPQqscgy9Ld8VyAXdfGLNdOVsBROePc/exec'
+      },
+      'toan_kt': {
+        title: 'Toán Kinh tế (TDTU)',
+        code: 'TOAN_KT',
+        url: 'https://script.google.com/macros/s/AKfycbzXmcu3_8aFagKv00W_Rw0K_2Zqs-JIQqAOVnfvOqYd1ZNPsxp6qkFTg7bLG0P-lCCh/exec'
+      },
+      'ptdlkd': {
+        title: 'Phân tích Dữ liệu Kinh doanh (UFM)',
+        code: 'PTDLKD',
+        url: 'https://script.google.com/macros/s/AKfycbyfUKTqFp0-1d4wqQNDxPu8_eXqoQSTlnDfL7j_At-BqjHkvo_r156GbVUkfMjCRKL9-w/exec'
+      }
+    };
+
+    function initPortal() {
+      const params = new URLSearchParams(window.location.search);
+      const courseId = params.get('id') || 'toan11';
+      const mode = params.get('mode') || 'exam';
+      const customSrc = params.get('src') || '';
+
+      let course = COURSE_MAP[courseId] || COURSE_MAP['toan11'];
+      let targetBaseUrl = customSrc || course.url;
+
+      // Tiêu đề & Chế độ
+      const titleEl = document.getElementById('courseTitleText');
+      const badgeEl = document.getElementById('modeBadge');
+      const directGasBtn = document.getElementById('btnDirectGas');
+      const toggleModeBtn = document.getElementById('btnToggleMode');
+      const toggleModeText = document.getElementById('toggleModeText');
+      const iframe = document.getElementById('appFrame');
+      const loader = document.getElementById('portalLoader');
+
+      if (titleEl) titleEl.innerText = course.title;
+      document.title = course.title + ' — QZCore Web Portal';
+
+      // Định cấu hình URL iframe
+      const fullUrl = targetBaseUrl + (targetBaseUrl.includes('?') ? '&' : '?') + 'mode=' + encodeURIComponent(mode);
+      if (directGasBtn) directGasBtn.href = fullUrl;
+
+      // Nút đổi chế độ Exam <-> Practice
+      if (mode === 'exam') {
+        badgeEl.className = 'portal-badge exam';
+        badgeEl.innerText = '🎯 Vào thi thử';
+        toggleModeText.innerText = 'Chuyển Luyện tập';
+        toggleModeBtn.href = '?id=' + encodeURIComponent(courseId) + '&mode=practice' + (customSrc ? ('&src=' + encodeURIComponent(customSrc)) : '');
+      } else {
+        badgeEl.className = 'portal-badge practice';
+        badgeEl.innerText = '⚡ Luyện tập';
+        toggleModeText.innerText = 'Chuyển Thi thử';
+        toggleModeBtn.href = '?id=' + encodeURIComponent(courseId) + '&mode=exam' + (customSrc ? ('&src=' + encodeURIComponent(customSrc)) : '');
+      }
+
+      // Xử lý nạp iframe & tắt loader
+      iframe.onload = function() {
+        if (loader) {
+          loader.classList.add('hidden');
+          setTimeout(() => { loader.style.display = 'none'; }, 300);
+        }
+      };
+
+      // Nạp iframe
+      iframe.src = fullUrl;
+
+      // Fallback tắt loader sau 6 giây nếu sự kiện onload bị chặn bởi sandbox
+      setTimeout(() => {
+        if (loader && !loader.classList.contains('hidden')) {
+          loader.classList.add('hidden');
+          setTimeout(() => { loader.style.display = 'none'; }, 300);
+        }
+      }, 6000);
+    }
+
+    window.addEventListener('DOMContentLoaded', initPortal);
+  </script>
+</body>
+</html>

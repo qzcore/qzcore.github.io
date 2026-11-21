@@ -1,0 +1,18 @@
+{
+  "appVersion": "5.0.2",
+  "libraryVersion": 38,
+  "releaseDate": "2026-11-21",
+  "masterEndpoint": "https://script.google.com/macros/s/AKfycbw0nPU3VHxCEbqR2VjouqXLnW-UgH_n2rG9VTXRAWDldjCaaQDmV3bbbApxy5178fPOjw/exec",
+  "templateSheetUrl": "https://docs.google.com/spreadsheets/d/14Rye2D2iNIzFOBQCAjyEbE0HgpmBJEnj774pe1fo4C4/copy?title=Quan_Ly_Thi_Trac_Nghiem_Mon_Hoc",
+  "downloadUrl": "https://qzcore.github.io/releases/dg.zip",
+  "appHtmlUrl": "https://qzcore.github.io/releases/Duyet_va_tao_de.html",
+  "title": "Hệ thống Khảo thí & Luyện tập Trắc nghiệm Thông minh v5.0.2",
+  "features": [
+    "Tự động làm tươi dữ liệu đa tab & khi quay lại cửa sổ (Auto-Refresh on Tab Switch / Window Refocus): Tự động quét lại thư mục trên đĩa và bảo toàn nguyên vẹn chủ đề đang chọn, vị trí cuộn trang và bộ lọc",
+    "Huy hiệu trạng thái Cloud Gateway & Phòng thi trực quan trên thanh Top Bar: Chấm màu sắc và văn bản trực tiếp (Mở thi, Khóa thi, Cloud kết nối), nhấp để chuyển nhanh Tab Quản trị",
+    "Tiện ích trợ năng đọc đề: Nút thu gọn / mở rộng danh mục chương bên trái (◀ Thu gọn) và bộ điều khiển cỡ chữ nhanh (A- / A+) lưu tự động vào localStorage",
+    "Cảnh báo chủ động dung lượng câu hỏi tại Bộ sinh đề (Tab 2): Đối chiếu thời gian thực giữa số câu yêu cầu và số câu đã duyệt trong ngân hàng để ngăn ngừa trùng lặp",
+    "Khắc phục triệt để lỗi render công thức toán KaTeX xung đột với định dạng Markdown in nghiêng bằng cơ chế Math Tokenizer",
+    "Đồng bộ hóa 1 tệp duy nhất Mo_App_Mon_Hoc.html tại thư mục gốc gói nén, tối ưu hóa 100% trải nghiệm cập nhật cho người dùng Non-Tech"
+  ]
+}

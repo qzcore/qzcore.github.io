@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QZCore — Nền tảng Khảo thí & Luyện tập Trắc nghiệm Thông minh Mở</title>
+  <meta name="description" content="QZCore: Hệ sinh thái khảo thí và luyện tập trắc nghiệm thông minh 0 đồng chi phí máy chủ dành cho giáo dục. Open-Core, chống gian lận đa tầng, KaTeX toán học sắc nét trên Google Drive & Google Sheets.">
+  
+  <!-- Favicon / Brand Icon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%232563eb'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-weight='900' font-size='42' fill='white'>QZ</text></svg>">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- KaTeX for Math Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    .glass-card {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased font-sans selection:bg-brand-500 selection:text-white">
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="sticky top-0 z-50 glass-card border-b border-slate-200/80 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <div class="flex items-center gap-3.5">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-brand-700 via-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-brand-500/25 font-extrabold text-lg tracking-wider">
+          QZ
+        </div>
+        <div>
+          <span class="font-extrabold text-2xl tracking-tight text-slate-900 block leading-none">QZCore</span>
+          <span class="text-[11px] font-bold text-brand-600 uppercase tracking-widest">Open Assessment Engine</span>
+        </div>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600 whitespace-nowrap">
+        <a href="#tinh-nang" class="hover:text-brand-600 transition-colors">Tính năng cốt lõi</a>
+        <a href="#huong-dan-cai-dat" class="hover:text-brand-600 transition-colors">Hướng dẫn cài đặt</a>
+        <a href="#open-core" class="hover:text-brand-600 transition-colors">Open-Core</a>
+        <a href="#kho-mon-hoc" class="text-brand-600 font-bold hover:text-brand-700 transition-colors flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>Môn thi mẫu</a>
+      </nav>
+
+      <div class="flex items-center gap-2.5">
+        <a href="#huong-dan-cai-dat" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-slate-300 hover:border-brand-500 bg-white hover:bg-slate-50 text-slate-700 hover:text-brand-600 text-xs sm:text-sm font-semibold transition-all">
+          <i data-lucide="book-open" class="w-4 h-4 text-brand-600"></i>
+          <span>Hướng dẫn cài đặt</span>
+        </a>
+        <div class="relative group" id="downloadGroup">
+          <a id="btnMainDownload" href="https://qzcore.github.io/releases/dg_windows.zip" download="dg_windows.zip" class="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs sm:text-sm font-semibold shadow-lg shadow-brand-600/25 hover:shadow-brand-600/40 transition-all transform hover:-translate-y-0.5 whitespace-nowrap" title="Tải về bộ công cụ môn học">
+            <i data-lucide="download" class="w-4 h-4"></i>
+            <span id="txtDownloadBtn">Download</span>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-70"></i>
+          </a>
+          <div class="absolute right-0 top-full mt-1.5 hidden group-hover:flex flex-col w-56 bg-white rounded-xl shadow-xl border border-slate-200 p-2 z-50 text-xs font-semibold">
+            <a href="https://qzcore.github.io/releases/dg_windows.zip" download="dg_windows.zip" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-blue-50 text-slate-700 hover:text-brand-600 transition-colors">
+              <i data-lucide="monitor" class="w-4 h-4 text-brand-600"></i>
+              <span>Bản Windows (.bat)</span>
+            </a>
+            <a href="https://qzcore.github.io/releases/dg_mac.zip" download="dg_mac.zip" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-blue-50 text-slate-700 hover:text-brand-600 transition-colors">
+              <i data-lucide="laptop" class="w-4 h-4 text-brand-600"></i>
+              <span>Bản macOS (.command)</span>
+            </a>
+            <div class="border-t border-slate-100 my-1"></div>
+            <a href="https://qzcore.github.io/releases/dg.zip" download="dg.zip" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-500 hover:text-slate-800 transition-colors">
+              <i data-lucide="package" class="w-4 h-4"></i>
+              <span>Gói tổng hợp (Cả 2)</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MÔ HÌNH KIỀNG 3 CHÂN ================= -->
+  <section id="mo-hinh" class="py-20 bg-white border-y border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="text-xs font-bold uppercase tracking-widest text-brand-600 mb-3">Mô hình Sư phạm Đột phá</h2>
+        <p class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          Hoàn thiện mô hình kiềng 3 chân trong kiểm tra & đánh giá
+        </p>
+        <p class="mt-4 text-slate-600 text-base sm:text-lg">
+          Lấp đầy khoảng trống giữa việc học sinh tự học tự do và các kỳ thi chính thức căng thẳng.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        
+        <!-- Cột 1: Thực hành tự do -->
+        <div class="bg-slate-50 rounded-2xl p-8 border border-slate-200 hover:border-brand-300 transition-all hover:shadow-lg flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-blue-100 text-brand-600 flex items-center justify-center mb-6">
+              <i data-lucide="compass" class="w-6 h-6"></i>
+            </div>
+            <span class="text-xs font-bold uppercase tracking-wider text-brand-600 bg-blue-50 px-2.5 py-1 rounded-md">Tự học & Rèn luyện</span>
+            <h3 class="text-xl font-bold text-slate-900 mt-3 mb-2">Thực hành tự do</h3>
+            <p class="text-slate-600 text-sm leading-relaxed mb-6">
+              Người học tự giác chọn chuyên đề, chọn số lượng câu hỏi, xem phản hồi đúng/sai tức thì kèm lời giải KaTeX chi tiết và phân tích bẫy sai lầm.
+            </p>
+            <ul class="space-y-2.5 text-sm text-slate-600">
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i><span>Phân chia theo chủ đề con (Micro-learning)</span></li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i><span>Không tính điểm vào sổ học tập chính thức</span></li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i><span>Hỗ trợ nút báo lỗi câu hỏi 1-chạm</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Cột 2: Giao bài tập về nhà -->
+        <div class="bg-gradient-to-b from-blue-50/70 to-slate-50 rounded-2xl p-8 border-2 border-brand-500 shadow-md relative flex flex-col justify-between">
+          <div class="absolute -top-3.5 right-6 bg-brand-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow">
+            Mới nhất
+          </div>
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-brand-600 text-white flex items-center justify-center mb-6 shadow-md shadow-brand-500/20">
+              <i data-lucide="calendar-check" class="w-6 h-6"></i>
+            </div>
+            <span class="text-xs font-bold uppercase tracking-wider text-brand-700 bg-blue-100 px-2.5 py-1 rounded-md">Đánh giá quá trình</span>
+            <h3 class="text-xl font-bold text-slate-900 mt-3 mb-2">Giao bài tập có định hạn</h3>
+            <p class="text-slate-600 text-sm leading-relaxed mb-6">
+              Giảng viên giao bài theo tuần với hạn chót (Deadline). Học sinh được phép lưu nháp làm nhiều lần, lấy điểm cao nhất vào điểm chuyên cần.
+            </p>
+            <ul class="space-y-2.5 text-sm text-slate-600">
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-600"></i><span>Cơ chế Lưu nháp (Save Draft & Resume)</span></li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-600"></i><span>Làm lại 2-3 lần lấy điểm cao nhất</span></li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-600"></i><span>Tự mở khóa lời giải sau hạn nộp (Chống quay cóp)</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Cột 3: Khảo thí chính thức -->
+        <div class="bg-slate-50 rounded-2xl p-8 border border-slate-200 hover:border-brand-300 transition-all hover:shadow-lg flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center mb-6">
+              <i data-lucide="shield-check" class="w-6 h-6"></i>
+            </div>
+            <span class="text-xs font-bold uppercase tracking-wider text-purple-700 bg-purple-50 px-2.5 py-1 rounded-md">Đánh giá tổng kết</span>
+            <h3 class="text-xl font-bold text-slate-900 mt-3 mb-2">Phòng thi chính thức</h3>
+            <p class="text-slate-600 text-sm leading-relaxed mb-6">
+              Thi tập trung theo ca thi nghiêm ngặt, đếm ngược thời gian thực, kích hoạt các cơ chế chống gian lận đa tầng và ghi điểm chính thức.
+            </p>
+            <ul class="space-y-2.5 text-sm text-slate-600">
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-purple-600"></i><span>Điểm danh khuôn mặt Webcam Check-in & Google One-Tap</span></li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-purple-600"></i><span>Giám sát thoát toàn màn hình (Fullscreen Lock)</span></li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-purple-600"></i><span>Hình mờ Watermark chống chụp ảnh phát tán đề thi</span></li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-purple-600"></i><span>Đề thi Snapshot bảo đảm tính toàn vẹn 100%</span></li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= KIẾN TRÚC OPEN-CORE ================= -->
+  <section id="open-core" class="py-20 bg-slate-900 text-slate-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="text-xs font-bold uppercase tracking-widest text-brand-400 bg-brand-950/80 border border-brand-800/80 px-3.5 py-1 rounded-full">Triết lý Công nghệ</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-3">
+          Kiến trúc Open-Core: Phần lõi Miễn phí, Dịch vụ Mở rộng
+        </h2>
+        <p class="mt-4 text-slate-400 text-base sm:text-lg">
+          Cam kết bảo đảm giá trị bền vững cho cộng đồng giáo dục, kết hợp tiềm năng mở rộng quy mô toàn quốc và quốc tế.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8 items-stretch">
+        
+        <!-- Khối 1: QZCore Engine (Free Core) -->
+        <div class="bg-slate-800/80 rounded-2xl p-8 border border-slate-700/80 relative flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/80 border border-emerald-800/60 px-3 py-1 rounded-lg font-mono">
+                QZCore Engine
+              </span>
+              <span class="text-xs font-bold text-slate-400">Dành cho Giáo viên</span>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-3">Miễn phí Vĩnh viễn (Open-Core)</h3>
+            <p class="text-slate-300 text-sm leading-relaxed mb-6">
+              Toàn bộ kịch bản Google Apps Script, giao diện thi WebClient tự thân và công cụ thẩm định duyệt đề máy tính được cung cấp mở và miễn phí cho giáo viên toàn quốc.
+            </p>
+            <ul class="space-y-3 text-sm text-slate-300">
+              <li class="flex items-start gap-2.5">
+                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5"></i>
+                <span>Tự động chấm điểm, trộn đề ma trận 60/30/10 trên Google Sheets</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5"></i>
+                <span>Ứng dụng máy tính Duyệt & tạo đề kiểm duyệt 11 tiêu chí V01–V11</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5"></i>
+                <span>Chủ quyền dữ liệu 100% trong Google Drive của giáo viên</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5"></i>
+                <span>Không giới hạn số lượng học sinh trong phạm vi tài khoản Google</span>
+              </li>
+            </ul>
+          </div>
+          <div class="mt-8 pt-6 border-t border-slate-700">
+            <span class="text-xs text-slate-400 block font-mono">Chi phí bản quyền: <strong>0 VNĐ / trọn đời</strong></span>
+          </div>
+        </div>
+
+        <!-- Khối 2: QZCore Services (Commercial / Enterprise) -->
+        <div class="bg-gradient-to-b from-brand-950/60 to-slate-800/90 rounded-2xl p-8 border border-brand-500/50 relative flex flex-col justify-between shadow-xl shadow-brand-950/50">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-bold uppercase tracking-wider text-brand-300 bg-brand-900/60 border border-brand-700/60 px-3 py-1 rounded-lg font-mono">
+                QZCore Cloud & Services
+              </span>
+              <span class="text-xs font-bold text-brand-400">Dành cho Nhà trường / Doanh nghiệp</span>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-3">Dịch vụ Mở rộng Thương mại</h3>
+            <p class="text-slate-300 text-sm leading-relaxed mb-6">
+              Các gói dịch vụ hạ tầng chuyên sâu phục vụ các kỳ thi lớn cấp khoa, trường đại học, sở giáo dục và các tổ chức đào tạo chuyên nghiệp.
+            </p>
+            <ul class="space-y-3 text-sm text-slate-300">
+              <li class="flex items-start gap-2.5">
+                <i data-lucide="zap" class="w-5 h-5 text-brand-400 shrink-0 mt-0.5"></i>
+                <span>Hạ tầng Cloud siêu chịu tải 50.000+ thí sinh đồng thời (Edge Buffer)</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <i data-lucide="brain-circuit" class="w-5 h-5 text-brand-400 shrink-0 mt-0.5"></i>
+                <span>Báo cáo khảo thí chuyên sâu theo mô hình IRT và chuẩn đầu ra OBE</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <i data-lucide="link" class="w-5 h-5 text-brand-400 shrink-0 mt-0.5"></i>
+                <span>Tích hợp sâu hệ thống LMS (Canvas, Moodle, Blackboard qua LTI)</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <i data-lucide="shield-alert" class="w-5 h-5 text-brand-400 shrink-0 mt-0.5"></i>
+                <span>Giám sát chống gian lận thông minh bằng AI & phân tích hành vi thi</span>
+              </li>
+            </ul>
+          </div>
+          <div class="mt-8 pt-6 border-t border-slate-700">
+            <span class="text-xs text-brand-400 block font-mono">Định hướng thương mại: <strong>Hợp đồng giải pháp & SaaS</strong></span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 6 TRỤ CỘT TÍNH NĂNG V5.0 ================= -->
+  <section id="tinh-nang" class="py-20 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="text-xs font-bold uppercase tracking-widest text-brand-600 mb-3">Tính năng toàn diện v5.0</h2>
+        <p class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          Bộ công cụ Khảo thí Toàn trình từ Offline đến Cloud
+        </p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+          <div class="w-10 h-10 rounded-lg bg-blue-100 text-brand-600 flex items-center justify-center mb-4">
+            <i data-lucide="sigma" class="w-5 h-5"></i>
+          </div>
+          <h4 class="font-bold text-slate-900 text-lg mb-2">KaTeX Toán học Sắc nét</h4>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            Hiển thị chuẩn xác các công thức toán học, ma trận, tích phân, ký hiệu thống kê phức tạp với tốc độ render tức thì trên mọi thiết bị di động.
+          </p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+          <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center mb-4">
+            <i data-lucide="shield-check" class="w-5 h-5"></i>
+          </div>
+          <h4 class="font-bold text-slate-900 text-lg mb-2">Chống Gian lận Đa tầng</h4>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            Giám sát toàn màn hình, phát hiện chuyển tab, Watermark thông minh chống chụp đề và cơ chế loại trừ hoàn toàn đáp án đúng khỏi mã nguồn máy học sinh.
+          </p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+          <div class="w-10 h-10 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center mb-4">
+            <i data-lucide="cpu" class="w-5 h-5"></i>
+          </div>
+          <h4 class="font-bold text-slate-900 text-lg mb-2">Tầng đệm Buffer Chống nghẽn</h4>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            Hấp thụ toàn bộ lưu lượng nộp bài đồng thời của hàng chục nghìn thí sinh chỉ trong 20ms, triệt tiêu 100% hiện tượng sập mạng hay mất bài làm.
+          </p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+          <div class="w-10 h-10 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center mb-4">
+            <i data-lucide="shuffle" class="w-5 h-5"></i>
+          </div>
+          <h4 class="font-bold text-slate-900 text-lg mb-2">Ma trận Đề chuẩn 60/30/10</h4>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            Tự động bốc đề theo phân bố độ khó chuẩn mực (60% Dễ - 30% Trung bình - 10% Khó), tạo ra hàng nghìn mã đề độc bản tương đương về độ khó.
+          </p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+          <div class="w-10 h-10 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center mb-4">
+            <i data-lucide="check-square" class="w-5 h-5"></i>
+          </div>
+          <h4 class="font-bold text-slate-900 text-lg mb-2">Thẩm định 11 Tiêu chí V01–V11</h4>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            Ứng dụng máy tính tự động rà soát ngân hàng câu hỏi, phát hiện phương án trùng lặp, câu hỏi thiếu dữ kiện hoặc định dạng KaTeX lỗi trước khi xuất bản.
+          </p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+          <div class="w-10 h-10 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center mb-4">
+            <i data-lucide="database" class="w-5 h-5"></i>
+          </div>
+          <h4 class="font-bold text-slate-900 text-lg mb-2">Đồng bộ 1-Chạm Offline/Cloud</h4>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            Quản trị môn học qua IndexedDB tốc độ cao, kết nối lại môn học chỉ trong 1 giây, tự động khởi tạo cấu trúc thư mục Google Drive 00–06 chuẩn mực.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= KHO MÔN THI MẪU ================= -->
+  <section id="kho-mon-hoc" class="py-20 bg-white border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="text-xs font-bold uppercase tracking-widest text-brand-600 mb-3">Kho học liệu thực chiến</h2>
+        <p class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          Trải nghiệm đề thi chuẩn hóa Đại học
+        </p>
+        <p class="mt-4 text-slate-600 text-base sm:text-lg">
+          Chọn một môn học bên dưới để trực tiếp trải nghiệm giao diện thi thực tế của sinh viên.
+        </p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- Card 1: Toán THPT Lớp 11 -->
+        <div class="bg-white rounded-2xl border border-slate-200 hover:border-brand-400 p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="px-3 py-1 text-xs font-bold rounded-lg border font-mono bg-blue-50 text-blue-700 border-blue-200">
+                TOAN_11
+              </span>
+              <span class="inline-flex items-center text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-2.5 py-0.5 rounded-full">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span>
+                Sẵn sàng thi
+              </span>
+            </div>
+
+            <div class="flex items-start gap-3.5 mb-3">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex-shrink-0 flex items-center justify-center shadow-md shadow-brand-500/10">
+                <i data-lucide="calculator" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h3 class="text-base font-bold text-slate-900 group-hover:text-brand-600 transition-colors leading-snug">
+                  Toán THPT Lớp 11
+                </h3>
+              </div>
+            </div>
+
+            <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mb-6 line-clamp-3">
+              Hàm số lượng giác, Cấp số cộng & Cấp số nhân, Giới hạn hàm số, Hình học không gian 11 theo Chương trình GDPT mới
+            </p>
+          </div>
+
+          <div class="space-y-2 pt-4 border-t border-slate-100">
+            <a href="https://qzcore.github.io/web/?id=toan11&mode=exam" target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs sm:text-sm font-semibold shadow-md shadow-brand-600/20 hover:shadow-brand-600/30 transition-all">
+              <i data-lucide="play" class="w-4 h-4"></i>
+              <span>Vào thi thử (Web Portal)</span>
+            </a>
+            <a href="https://qzcore.github.io/web/?id=toan11&mode=practice" target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold transition-colors">
+              <i data-lucide="book-open" class="w-4 h-4"></i>
+              <span>Luyện tập tự do (Practice)</span>
+            </a>
+            <a href="https://script.google.com/macros/s/AKfycbwTBvCgvPckjXJGTSIep7X2YQzCeQlQ2U63rrPQqscgy9Ld8VyAXdfGLNdOVsBROePc/exec?mode=exam" target="_blank" rel="noopener noreferrer" class="block text-center text-[11px] font-semibold text-slate-400 hover:text-brand-600 transition-colors pt-1">
+              Mở trực tiếp trên Apps Script ↗
+            </a>
+          </div>
+        </div>
+
+        <!-- Card 2: Toán Kinh tế (TDTU) -->
+        <div class="bg-white rounded-2xl border border-slate-200 hover:border-brand-400 p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="px-3 py-1 text-xs font-bold rounded-lg border font-mono bg-indigo-50 text-indigo-700 border-indigo-200">
+                TOAN_KT
+              </span>
+              <span class="inline-flex items-center text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-2.5 py-0.5 rounded-full">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span>
+                Sẵn sàng thi
+              </span>
+            </div>
+
+            <div class="flex items-start gap-3.5 mb-3">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white flex-shrink-0 flex items-center justify-center shadow-md shadow-brand-500/10">
+                <i data-lucide="calculator" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h3 class="text-base font-bold text-slate-900 group-hover:text-brand-600 transition-colors leading-snug">
+                  Toán Kinh tế (TDTU)
+                </h3>
+              </div>
+            </div>
+
+            <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mb-6 line-clamp-3">
+              Ma trận & Định thức, Vi tích phân hàm 1 biến & nhiều biến, Bài toán cân bằng kinh tế vi mô/vĩ mô chuẩn ĐH Tôn Đức Thắng
+            </p>
+          </div>
+
+          <div class="space-y-2 pt-4 border-t border-slate-100">
+            <a href="https://qzcore.github.io/web/?id=toan_kt&mode=exam" target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs sm:text-sm font-semibold shadow-md shadow-brand-600/20 hover:shadow-brand-600/30 transition-all">
+              <i data-lucide="play" class="w-4 h-4"></i>
+              <span>Vào thi thử (Web Portal)</span>
+            </a>
+            <a href="https://qzcore.github.io/web/?id=toan_kt&mode=practice" target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold transition-colors">
+              <i data-lucide="book-open" class="w-4 h-4"></i>
+              <span>Luyện tập tự do (Practice)</span>
+            </a>
+            <a href="https://script.google.com/macros/s/AKfycbzXmcu3_8aFagKv00W_Rw0K_2Zqs-JIQqAOVnfvOqYd1ZNPsxp6qkFTg7bLG0P-lCCh/exec?mode=exam" target="_blank" rel="noopener noreferrer" class="block text-center text-[11px] font-semibold text-slate-400 hover:text-brand-600 transition-colors pt-1">
+              Mở trực tiếp trên Apps Script ↗
+            </a>
+          </div>
+        </div>
+
+        <!-- Card 3: Phân tích Dữ liệu Kinh doanh (UFM) -->
+        <div class="bg-white rounded-2xl border border-slate-200 hover:border-brand-400 p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="px-3 py-1 text-xs font-bold rounded-lg border font-mono bg-emerald-50 text-emerald-700 border-emerald-200">
+                PTDLKD
+              </span>
+              <span class="inline-flex items-center text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-2.5 py-0.5 rounded-full">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span>
+                Sẵn sàng thi
+              </span>
+            </div>
+
+            <div class="flex items-start gap-3.5 mb-3">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-600 text-white flex-shrink-0 flex items-center justify-center shadow-md shadow-brand-500/10">
+                <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h3 class="text-base font-bold text-slate-900 group-hover:text-brand-600 transition-colors leading-snug">
+                  Phân tích Dữ liệu Kinh doanh (UFM)
+                </h3>
+              </div>
+            </div>
+
+            <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mb-6 line-clamp-3">
+              Thống kê mô tả, Hồi quy tuyến tính, Kiểm định giả thuyết Z/t/F, Bảng tra cứu số chuẩn hóa ĐH Tài chính - Marketing
+            </p>
+          </div>
+
+          <div class="space-y-2 pt-4 border-t border-slate-100">
+            <a href="https://qzcore.github.io/web/?id=ptdlkd&mode=exam" target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs sm:text-sm font-semibold shadow-md shadow-brand-600/20 hover:shadow-brand-600/30 transition-all">
+              <i data-lucide="play" class="w-4 h-4"></i>
+              <span>Vào thi thử (Web Portal)</span>
+            </a>
+            <a href="https://qzcore.github.io/web/?id=ptdlkd&mode=practice" target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold transition-colors">
+              <i data-lucide="book-open" class="w-4 h-4"></i>
+              <span>Luyện tập tự do (Practice)</span>
+            </a>
+            <a href="https://script.google.com/macros/s/AKfycbyfUKTqFp0-1d4wqQNDxPu8_eXqoQSTlnDfL7j_At-BqjHkvo_r156GbVUkfMjCRKL9-w/exec?mode=exam" target="_blank" rel="noopener noreferrer" class="block text-center text-[11px] font-semibold text-slate-400 hover:text-brand-600 transition-colors pt-1">
+              Mở trực tiếp trên Apps Script ↗
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- ================= HƯỚNG DẪN CÀI ĐẶT & TRIỂN KHAI ================= -->
+  <section id="huong-dan-cai-dat" class="py-20 bg-slate-50 border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="text-xs font-bold uppercase tracking-widest text-brand-600 mb-3">Bắt đầu nhanh trong 30 giây</h2>
+        <p class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          Hướng dẫn Cài đặt & Triển khai Hệ thống
+        </p>
+        <p class="mt-4 text-slate-600 text-base sm:text-lg">
+          Lựa chọn phương thức triển khai phù hợp nhất với nhu cầu giảng dạy và hạ tầng máy tính của Thầy Cô.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        
+        <!-- Bước 1: Tải & Khởi chạy Gói Môn học Ngoại tuyến -->
+        <div class="bg-white rounded-2xl p-8 border-2 border-brand-500 shadow-md relative flex flex-col justify-between hover:shadow-xl transition-all">
+          <div class="absolute -top-3.5 right-6 bg-brand-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow">
+            Khuyên dùng
+          </div>
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center mb-6">
+              <i data-lucide="folder-archive" class="w-6 h-6"></i>
+            </div>
+            <span class="text-xs font-bold uppercase tracking-wider text-brand-700 bg-blue-100 px-2.5 py-1 rounded-md">Trọn gói Ngoại tuyến</span>
+            <h3 class="text-xl font-bold text-slate-900 mt-3 mb-2">1. Tải Gói Môn Học Độc Lập</h3>
+            <p class="text-slate-600 text-sm leading-relaxed mb-6">
+              Mỗi môn học là một thư mục riêng biệt, tự thân 100% offline, tích hợp sẵn ngân hàng câu hỏi mẫu và bộ đôi Trợ lý AI.
+            </p>
+            <ol class="space-y-3 text-sm text-slate-600">
+              <li class="flex items-start gap-2.5">
+                <span class="w-5 h-5 rounded-full bg-blue-100 text-brand-700 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
+                <span>Tải gói tương ứng với hệ điều hành của Thầy Cô (Windows hoặc macOS) bên dưới.</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="w-5 h-5 rounded-full bg-blue-100 text-brand-700 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
+                <span>Giải nén tệp zip vào một thư mục môn học riêng (ví dụ: <code>Toan_kinh_te</code>, <code>Xac_suat</code>...).</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="w-5 h-5 rounded-full bg-blue-100 text-brand-700 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
+                <span>Nhấp đúp chuột vào <strong>Mo_App_Mon_Hoc</strong> (.bat trên Windows hoặc .command trên Mac) để làm việc ngay.</span>
+              </li>
+            </ol>
+          </div>
+          <div class="pt-6 border-t border-slate-100 mt-6 flex flex-col sm:flex-row gap-3">
+            <a href="https://qzcore.github.io/releases/dg_windows.zip" download="dg_windows.zip" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs sm:text-sm font-semibold shadow-md shadow-brand-600/20 transition-all">
+              <i data-lucide="monitor" class="w-4 h-4"></i>
+              <span>Bản Windows (.bat)</span>
+            </a>
+            <a href="https://qzcore.github.io/releases/dg_mac.zip" download="dg_mac.zip" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs sm:text-sm font-semibold transition-all">
+              <i data-lucide="laptop" class="w-4 h-4 text-emerald-400"></i>
+              <span>Bản macOS (.command)</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Bước 2: Google Sheet Backend -->
+        <div class="bg-white rounded-2xl p-8 border border-slate-200 hover:border-brand-300 transition-all hover:shadow-lg flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-6">
+              <i data-lucide="file-spreadsheet" class="w-6 h-6"></i>
+            </div>
+            <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md">Sổ điểm Google Cloud</span>
+            <h3 class="text-xl font-bold text-slate-900 mt-3 mb-2">2. Kết Nối Google Sheet Backend</h3>
+            <p class="text-slate-600 text-sm leading-relaxed mb-6">
+              Thiết lập CSDL sổ điểm và Web App chấm thi trên tài khoản Google cá nhân của Thầy Cô, bảo mật tuyệt đối 100%.
+            </p>
+            <ol class="space-y-3 text-sm text-slate-600">
+              <li class="flex items-start gap-2.5">
+                <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
+                <span>Bấm nút <strong>"Nhận Bảng tính Mẫu"</strong> tại tab Quản trị Cloud trên ứng dụng (hoặc tạo Sheet trắng).</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
+                <span>Mở <em>Tiện ích mở rộng</em> ➔ <em>Apps Script</em>, dán mã trong <code>Ma_Nguon_Google_Sheet_ThinClientWrapper.txt</code>.</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
+                <span>Nhấn <em>Triển khai mới</em> dạng Web App ➔ Dán URL vào mục <strong>Quản trị Cloud</strong> để đồng bộ và thu điểm.</span>
+              </li>
+            </ol>
+          </div>
+          <div class="pt-6 border-t border-slate-100 mt-6">
+            <a href="https://github.com/qzcore/Trac_nghiem_TM/blob/main/docs/HUONG_DAN_CAI_DAT_GOOGLE_SHEET.md" target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-emerald-600 text-emerald-700 hover:bg-emerald-50 text-xs sm:text-sm font-semibold transition-all">
+              <i data-lucide="book-open" class="w-4 h-4"></i>
+              <span>Xem Hướng dẫn Cài đặt Chi tiết (3 phút)</span>
+            </a>
+          </div>
+        </div>
+              <i data-lucide="book-open" class="w-4 h-4"></i>
+              <span>Xem hướng dẫn chi tiết</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FAQ ACCORDION ================= -->
+  <section id="faq" class="py-20 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-xs font-bold uppercase tracking-widest text-brand-600 mb-3">Giải đáp thắc mắc</h2>
+        <p class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Câu hỏi thường gặp của Thầy Cô</p>
+      </div>
+
+      <div class="space-y-4">
+        
+        <details class="group bg-slate-50 p-6 rounded-2xl border border-slate-200 [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between cursor-pointer font-bold text-slate-900 text-base sm:text-lg">
+            <span>1. Nền tảng QZCore có thực sự miễn phí hoàn toàn không?</span>
+            <span class="transition group-open:rotate-180"><i data-lucide="chevron-down" class="w-5 h-5 text-slate-500"></i></span>
+          </summary>
+          <p class="mt-4 text-slate-600 text-sm leading-relaxed">
+            Dạ bản lõi <strong>QZCore Engine</strong> hoàn toàn miễn phí trọn đời cho giáo viên. Hệ thống vận hành dựa trên tài nguyên miễn phí sẵn có của Google Drive và Google Apps Script trong tài khoản Google của Thầy Cô. Thầy Cô không phải trả bất kỳ chi phí duy trì máy chủ hay bản quyền phần mềm nào.
+          </p>
+        </details>
+
+        <details class="group bg-slate-50 p-6 rounded-2xl border border-slate-200 [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between cursor-pointer font-bold text-slate-900 text-base sm:text-lg">
+            <span>2. Hàng trăm đến hàng chục nghìn học sinh cùng nộp bài có bị sập mạng không?</span>
+            <span class="transition group-open:rotate-180"><i data-lucide="chevron-down" class="w-5 h-5 text-slate-500"></i></span>
+          </summary>
+          <p class="mt-4 text-slate-600 text-sm leading-relaxed">
+            Không lo nghẽn mạng! Đối với lớp học thông thường, hệ thống phân tán gửi thẳng vào Google Sheet của Thầy Cô trong dưới 1 giây. Với các kỳ thi lớn từ 1.000 đến 50.000 thí sinh, kiến trúc QZCore tích hợp sẵn <strong>Tầng đệm siêu tốc Cloudflare Workers / Firebase</strong> tiếp nhận bài thi trong 20ms và điều tiết nhả đều đặn về Google Sheet, triệt tiêu 100% lỗi nghẽn mạng hay quá tải.
+          </p>
+        </details>
+
+        <details class="group bg-slate-50 p-6 rounded-2xl border border-slate-200 [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between cursor-pointer font-bold text-slate-900 text-base sm:text-lg">
+            <span>3. Học sinh có thể bấm F12 (Inspect) để soi đáp án đúng không?</span>
+            <span class="transition group-open:rotate-180"><i data-lucide="chevron-down" class="w-5 h-5 text-slate-500"></i></span>
+          </summary>
+          <p class="mt-4 text-slate-600 text-sm leading-relaxed">
+            Tuyệt đối không! Trong chế độ Thi chính thức, toàn bộ đáp án đúng và lời giải được bảo mật 100% trên máy chủ Google. Ứng dụng phía học sinh chỉ nhận duy nhất nội dung câu hỏi và các phương án nhiễu; máy học sinh hoàn toàn không có thông tin đáp án đúng cho đến khi nộp bài.
+          </p>
+        </details>
+
+        <details class="group bg-slate-50 p-6 rounded-2xl border border-slate-200 [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between cursor-pointer font-bold text-slate-900 text-base sm:text-lg">
+            <span>4. Tôi không rành về tin học và lập trình thì có dùng được không?</span>
+            <span class="transition group-open:rotate-180"><i data-lucide="chevron-down" class="w-5 h-5 text-slate-500"></i></span>
+          </summary>
+          <p class="mt-4 text-slate-600 text-sm leading-relaxed">
+            Rất dễ dàng! Mọi thao tác quản lý danh sách lớp, chọn đề, xem điểm thi đều diễn ra ngay trên bảng tính Google Sheet tương tự như việc Thầy Cô sử dụng Excel hàng ngày. Chỉ cần bấm 1 click là hệ thống tự khởi tạo toàn bộ.
+          </p>
+        </details>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= THÔNG TIN KIẾN TRÚC SƯ TRƯỞNG ================= -->
+  <section id="tac-gia" class="py-20 bg-slate-50 border-t border-slate-200">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-sm flex flex-col md:flex-row items-center gap-8 text-center md:text-left">
+        <div class="w-32 h-32 rounded-3xl bg-gradient-to-tr from-brand-700 via-blue-600 to-indigo-600 text-white flex items-center justify-center font-extrabold text-3xl shadow-xl shadow-brand-500/25 shrink-0">
+          QZ
+        </div>
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-brand-600 bg-blue-50 px-3 py-1 rounded-full">Sáng lập & Kiến trúc sư trưởng</span>
+          <h3 class="text-2xl font-bold text-slate-900 mt-2 mb-1">Thầy T.M. Tường</h3>
+          <p class="text-slate-600 text-sm mb-4">Trường Đại học Tài chính - Marketing (UFM) & QZCore Community</p>
+          <p class="text-slate-600 text-sm leading-relaxed mb-6">
+            Dự án QZCore được phát triển với sứ mệnh mang công nghệ khảo thí hiện đại, công bằng, bảo mật và hoàn toàn miễn phí đến với mạng lưới Thầy Cô giáo và người học trên toàn quốc, hướng tới quy chuẩn hóa khảo thí số khu vực và quốc tế.
+          </p>
+          <div class="flex flex-wrap items-center justify-center md:justify-start gap-4">
+            <a href="https://github.com/qzcore" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-700 hover:text-brand-600">
+              <i data-lucide="github" class="w-4 h-4 text-brand-600"></i>
+              <span>github.com/qzcore</span>
+            </a>
+            <span class="text-slate-300">•</span>
+            <a href="mailto:tmtuong@gmail.com" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-700 hover:text-brand-600">
+              <i data-lucide="mail" class="w-4 h-4 text-brand-600"></i>
+              <span>tmtuong@gmail.com</span>
+            </a>
+            <span class="text-slate-300">•</span>
+            <span class="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
+              <i data-lucide="map-pin" class="w-4 h-4 text-brand-600"></i>
+              <span>TP. Hồ Chí Minh</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:flex sm:justify-between sm:items-center">
+      <div class="flex items-center justify-center sm:justify-start gap-3 mb-4 sm:mb-0">
+        <div class="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center text-white font-extrabold text-xs">
+          QZ
+        </div>
+        <span class="font-bold text-slate-200">QZCore</span>
+        <span class="text-xs text-slate-500">© 2026 QZCore Community & T.M. Tường. Bản quyền tác giả được bảo lưu.</span>
+      </div>
+      <div class="text-xs text-slate-500">
+        Nền tảng Open-Core phụng sự sự nghiệp Chuyển đổi số Giáo dục Việt Nam.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+
+    // Tự động nhận diện hệ điều hành để tối ưu nút Download chính
+    (function detectUserOS() {
+      const isMac = navigator.userAgent.toUpperCase().indexOf('MAC') >= 0;
+      const btn = document.getElementById('btnMainDownload');
+      const txt = document.getElementById('txtDownloadBtn');
+      if (btn && txt) {
+        if (isMac) {
+          btn.href = 'https://qzcore.github.io/releases/dg_mac.zip';
+          btn.download = 'dg_mac.zip';
+          txt.innerText = 'Download cho Mac';
+        } else {
+          btn.href = 'https://qzcore.github.io/releases/dg_windows.zip';
+          btn.download = 'dg_windows.zip';
+          txt.innerText = 'Download Windows';
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
